@@ -1,0 +1,14 @@
+Source: tunapanel
+Section: admin
+Priority: optional
+Maintainer: Mahmut Micozkadıoğlu <mahmutmicoz@gmail.com>
+Build-Depends: debhelper-compat (= 13), golang-go
+Standards-Version: 4.6.2
+Rules-Requires-Root: no
+
+Package: tunapanel
+Architecture: amd64
+Depends: ${misc:Depends}, systemd
+Description: Minimal local-first server control panel components
+ Tunapanel provides a minimal, security-first agent and CLI for managing
+ systemd services over a local UNIX socket.

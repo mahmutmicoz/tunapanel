@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+	configure)
+		if command -v groupadd >/dev/null 2>&1; then
+			groupadd -f tunapanel || true
+		fi
+
+		if command -v systemctl >/dev/null 2>&1; then
+			systemctl daemon-reload || true
+			if command -v systemd-tmpfiles >/dev/null 2>&1; then
+				systemd-tmpfiles --create /etc/tmpfiles.d/tunapanel.conf || true
+			fi
+			systemctl enable --now tunapanel-agent || true
+		fi
+		;;
+	esac
+
+exit 0

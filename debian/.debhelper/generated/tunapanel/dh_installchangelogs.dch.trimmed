@@ -1,0 +1,32 @@
+tunapanel (0.1.4) unstable; urgency=medium
+
+  * Add graceful shutdown handling for the web UI.
+
+ -- Mahmut Micozkadıoğlu <mahmutmicoz@gmail.com>  Fri, 16 Jan 2026 16:49:27 +0300
+
+tunapanel (0.1.3) unstable; urgency=medium
+
+  * Fix web UI unit to use a dedicated dynamic user.
+
+ -- Mahmut Micozkadıoğlu <mahmutmicoz@gmail.com>  Fri, 16 Jan 2026 16:41:40 +0300
+
+tunapanel (0.1.2) unstable; urgency=medium
+
+  * Add minimal read-only web UI bound to localhost.
+  * Include UNIX socket agent client with timeouts and status page.
+  * Add dedicated systemd unit for the web UI.
+
+ -- Mahmut Micozkadıoğlu <mahmutmicoz@gmail.com>  Fri, 16 Jan 2026 16:26:28 +0300
+
+tunapanel (0.1.1) unstable; urgency=medium
+
+  * Add logrotate integration for agent and audit logs.
+
+ -- Mahmut Micozkadıoğlu <mahmutmicoz@gmail.com>  Fri, 16 Jan 2026 16:08:11 +0300
+
+tunapanel (0.1.0) unstable; urgency=medium
+
+  * Initial release with tunapanel-agent and tunactl.
+  * systemd unit and tmpfiles integration.
+
+ -- Mahmut Micozkadıoğlu <mahmutmicoz@gmail.com>  Fri, 16 Jan 2026 15:31:25 +0300

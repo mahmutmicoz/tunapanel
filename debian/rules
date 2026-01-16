@@ -1,0 +1,25 @@
+#!/usr/bin/make -f
+
+GO ?= go
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	mkdir -p build
+	$(GO) build -trimpath -ldflags "-s -w" -o build/tunapanel-agent ./cmd/tunapanel-agent
+	$(GO) build -trimpath -ldflags "-s -w" -o build/tunactl ./cmd/tunactl
+	$(GO) build -trimpath -ldflags "-s -w" -o build/tunapanel ./cmd/tunapanel
+
+override_dh_auto_install:
+	install -D -m 0755 build/tunapanel-agent debian/tunapanel/usr/bin/tunapanel-agent
+	install -D -m 0755 build/tunactl debian/tunapanel/usr/bin/tunactl
+	install -D -m 0755 build/tunapanel debian/tunapanel/usr/bin/tunapanel
+	install -D -m 0644 packaging/systemd/tunapanel-agent.service debian/tunapanel/etc/systemd/system/tunapanel-agent.service
+	install -D -m 0644 packaging/systemd/tunapanel.service debian/tunapanel/etc/systemd/system/tunapanel.service
+	install -D -m 0644 packaging/tmpfiles/tunapanel.conf debian/tunapanel/etc/tmpfiles.d/tunapanel.conf
+	install -d -m 0750 debian/tunapanel/var/log/tunapanel
+
+override_dh_fixperms:
+	dh_fixperms
+	chmod 0750 debian/tunapanel/var/log/tunapanel

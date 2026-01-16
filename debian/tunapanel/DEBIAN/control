@@ -1,0 +1,11 @@
+Package: tunapanel
+Version: 0.1.4
+Architecture: amd64
+Maintainer: Mahmut Micozkadıoğlu <mahmutmicoz@gmail.com>
+Installed-Size: 17378
+Depends: systemd
+Section: admin
+Priority: optional
+Description: Minimal local-first server control panel components
+ Tunapanel provides a minimal, security-first agent and CLI for managing
+ systemd services over a local UNIX socket.

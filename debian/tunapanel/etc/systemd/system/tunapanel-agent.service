@@ -1,0 +1,16 @@
+# TUNAPANEL agent systemd service.
+[Unit]
+Description=TUNAPANEL Agent
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/tunapanel-agent
+Restart=on-failure
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

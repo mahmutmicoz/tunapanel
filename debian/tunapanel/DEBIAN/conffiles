@@ -1,0 +1,4 @@
+/etc/logrotate.d/tunapanel
+/etc/systemd/system/tunapanel-agent.service
+/etc/systemd/system/tunapanel.service
+/etc/tmpfiles.d/tunapanel.conf

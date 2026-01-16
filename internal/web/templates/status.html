@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>TUNAPANEL Status</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      body { font-family: "Liberation Sans", sans-serif; margin: 2rem; color: #1b1b1b; background: #f6f5f2; }
+      h1 { margin: 0 0 0.5rem 0; font-size: 1.6rem; }
+      .meta { color: #555; font-size: 0.9rem; margin-bottom: 1.5rem; }
+      .card { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 1rem; margin-bottom: 1rem; }
+      .ok { color: #0a7a2e; font-weight: bold; }
+      .bad { color: #a00000; font-weight: bold; }
+      ul { padding-left: 1.2rem; }
+      code { background: #f0f0f0; padding: 0.1rem 0.25rem; border-radius: 4px; }
+    </style>
+  </head>
+  <body>
+    <h1>TUNAPANEL Status</h1>
+    <div class="meta">Checked: {{.CheckedAt}}</div>
+
+    <div class="card">
+      <div>Web UI: <span class="ok">OK</span></div>
+      <div>Agent: {{if .AgentOK}}<span class="ok">OK</span>{{else}}<span class="bad">DOWN</span>{{end}}</div>
+      {{if .AgentError}}<div>Agent Error: <code>{{.AgentError}}</code></div>{{end}}
+      {{if .AgentMessage}}<div>Agent Message: <code>{{.AgentMessage}}</code></div>{{end}}
+    </div>
+
+    <div class="card">
+      <div>Enabled Services</div>
+      {{if .Services}}
+        <ul>
+        {{range .Services}}<li>{{.}}</li>{{end}}
+        </ul>
+      {{else}}
+        <div class="meta">No data.</div>
+      {{end}}
+    </div>
+  </body>
+</html>

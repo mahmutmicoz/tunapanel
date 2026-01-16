@@ -1,0 +1,20 @@
+# TUNAPANEL web UI systemd service.
+[Unit]
+Description=TUNAPANEL Web UI
+After=network.target
+Wants=tunapanel-agent.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/tunapanel
+Restart=on-failure
+User=tunapanel-web
+DynamicUser=true
+SupplementaryGroups=tunapanel
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
