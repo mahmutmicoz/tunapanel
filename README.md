@@ -2,6 +2,26 @@
 
 Minimal, local-first server control panel components.
 
+Local, read-only system control panel (no remote access).
+
+## Quick Start
+
+```bash
+sudo dpkg -i tunapanel_0.1.4_amd64.deb
+sudo systemctl enable --now tunapanel-agent
+sudo systemctl enable --now tunapanel
+```
+
+Open:
+
+`http://127.0.0.1:8080/`
+
+## Screenshot
+
+![TUNAPANEL UI](docs/screenshot.png)
+
+Screenshot is taken from a local demo system.
+
 ## Build
 
 ```sh
@@ -42,7 +62,8 @@ Endpoints:
 
 - `GET /health`
 - `GET /status`
-- `GET /services`
+- `GET /services` (default: enabled)
+- `GET /services?state=running`
 
 ## Binaries
 

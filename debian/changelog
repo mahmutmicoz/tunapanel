@@ -1,3 +1,11 @@
+tunapanel (0.1.5) unstable; urgency=medium
+
+  * UI polish: service filtering, counts, and running/enabled toggle.
+  * Add service.running command for running services list.
+  * Add screenshot to README.
+
+ -- Mahmut Micozkadıoğlu <mahmutmicoz@gmail.com>  Fri, 16 Jan 2026 17:23:09 +0300
+
 tunapanel (0.1.4) unstable; urgency=medium
 
   * Add graceful shutdown handling for the web UI.

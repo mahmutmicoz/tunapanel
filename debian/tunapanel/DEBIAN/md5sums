@@ -1,6 +1,6 @@
-befa7adbd1b8f14dcfc85553d0353141  usr/bin/tunactl
-e0e2c1ac3a22f5a63081ee0c77de6852  usr/bin/tunapanel
-eca1b1fc73ad17ef8c814e1a9f920ac1  usr/bin/tunapanel-agent
-4e415bb825e16d1ce78ba30401078bf4  usr/share/doc/tunapanel/README.md
-9714a0ae5045379f0110e701f407dd1b  usr/share/doc/tunapanel/changelog.gz
+3788c9e9d7b8042134a87ab715a05c01  usr/bin/tunactl
+e503894d72a592fddf8ef649bf939fe2  usr/bin/tunapanel
+438ba546630dd950e56cae8ed733e03c  usr/bin/tunapanel-agent
+b22443cc07faacb5f706ff3df673e8f0  usr/share/doc/tunapanel/README.md
+d75db2fd78498dcb7d3856c4a67db4ff  usr/share/doc/tunapanel/changelog.gz
 bdd70e0e2173dfe9454923c8b3b1e6bf  usr/share/doc/tunapanel/copyright

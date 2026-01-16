@@ -63,20 +63,36 @@ func ListEnabledServices(dryRun bool) ([]string, string, error) {
 		return nil, message, err
 	}
 
-	var services []string
-	scanner := bufio.NewScanner(strings.NewReader(output))
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		if line == "" {
-			continue
-		}
-		fields := strings.Fields(line)
-		if len(fields) == 0 {
-			continue
-		}
-		services = append(services, fields[0])
+	services, err := parseServicesFromOutput(output)
+	if err != nil {
+		return nil, message, err
 	}
-	if err := scanner.Err(); err != nil {
+
+	return services, message, nil
+}
+
+func ListRunningServices(dryRun bool) ([]string, string, error) {
+	cmd := []string{
+		"systemctl",
+		"list-units",
+		"--type=service",
+		"--state=running",
+		"--no-legend",
+		"--no-pager",
+	}
+
+	message := ""
+	if dryRun {
+		message = "dry-run has no effect on service.running"
+	}
+
+	output, err := executor.Run(cmd)
+	if err != nil {
+		return nil, message, err
+	}
+
+	services, err := parseServicesFromOutput(output)
+	if err != nil {
 		return nil, message, err
 	}
 
@@ -109,4 +125,24 @@ func StopService(name string, dryRun bool) ([]string, string, error) {
 	}
 
 	return cmd, fmt.Sprintf("service stopped: %s", name), nil
+}
+
+func parseServicesFromOutput(output string) ([]string, error) {
+	var services []string
+	scanner := bufio.NewScanner(strings.NewReader(output))
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" {
+			continue
+		}
+		fields := strings.Fields(line)
+		if len(fields) == 0 {
+			continue
+		}
+		services = append(services, fields[0])
+	}
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+	return services, nil
 }

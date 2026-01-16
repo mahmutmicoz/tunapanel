@@ -41,8 +41,18 @@ func (c *AgentClient) Status(ctx context.Context) (models.Response, error) {
 	return c.Do(ctx, models.Request{Command: "status"})
 }
 
-func (c *AgentClient) ListServices(ctx context.Context) (models.Response, error) {
-	return c.Do(ctx, models.Request{Command: "service.list"})
+func (c *AgentClient) ListServices(ctx context.Context, state string) (models.Response, error) {
+	command := "service.list"
+	switch state {
+	case "", "enabled":
+		command = "service.list"
+	case "running":
+		command = "service.running"
+	default:
+		return models.Response{}, fmt.Errorf("invalid service state")
+	}
+
+	return c.Do(ctx, models.Request{Command: command})
 }
 
 func (c *AgentClient) Do(ctx context.Context, req models.Request) (models.Response, error) {

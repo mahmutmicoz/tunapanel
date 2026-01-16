@@ -177,6 +177,14 @@ func handleCommand(req models.Request) (models.Response, int) {
 		resp.Services = servicesList
 		resp.Message = message
 		return resp, http.StatusOK
+	case "service.running":
+		servicesList, message, err := services.ListRunningServices(req.DryRun)
+		if err != nil {
+			return errorResponse(err, req.DryRun)
+		}
+		resp.Services = servicesList
+		resp.Message = message
+		return resp, http.StatusOK
 	case "service.start":
 		if req.Service == "" {
 			return badRequest("service name is required", req.DryRun)

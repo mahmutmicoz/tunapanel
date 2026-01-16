@@ -9,10 +9,20 @@
       h1 { margin: 0 0 0.5rem 0; font-size: 1.6rem; }
       .meta { color: #555; font-size: 0.9rem; margin-bottom: 1.5rem; }
       .card { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 1rem; margin-bottom: 1rem; }
+      .row { display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: center; }
+      .badge { display: inline-block; padding: 0.1rem 0.5rem; border-radius: 999px; font-size: 0.8rem; font-weight: bold; }
+      .badge.ok { background: #e3f6e9; color: #0a7a2e; }
+      .badge.bad { background: #fbe7e7; color: #a00000; }
       .ok { color: #0a7a2e; font-weight: bold; }
       .bad { color: #a00000; font-weight: bold; }
       ul { padding-left: 1.2rem; }
       code { background: #f0f0f0; padding: 0.1rem 0.25rem; border-radius: 4px; }
+      .controls { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; margin-bottom: 0.75rem; }
+      .controls input { padding: 0.4rem 0.6rem; border-radius: 4px; border: 1px solid #ccc; min-width: 220px; }
+      .toggle-group { display: flex; gap: 0.5rem; }
+      .toggle { padding: 0.35rem 0.7rem; border-radius: 4px; border: 1px solid #ccc; background: #f3f3f3; cursor: pointer; }
+      .toggle.active { background: #1b1b1b; color: #fff; border-color: #1b1b1b; }
+      .service-meta { margin: 0.5rem 0 0.75rem; }
     </style>
   </head>
   <body>
@@ -20,21 +30,104 @@
     <div class="meta">Checked: {{.CheckedAt}}</div>
 
     <div class="card">
-      <div>Web UI: <span class="ok">OK</span></div>
-      <div>Agent: {{if .AgentOK}}<span class="ok">OK</span>{{else}}<span class="bad">DOWN</span>{{end}}</div>
+      <div class="row">
+        <div>Web UI: <span class="badge ok">OK</span></div>
+        <div>Agent: {{if .AgentOK}}<span class="badge ok">OK</span>{{else}}<span class="badge bad">DOWN</span>{{end}}</div>
+      </div>
       {{if .AgentError}}<div>Agent Error: <code>{{.AgentError}}</code></div>{{end}}
       {{if .AgentMessage}}<div>Agent Message: <code>{{.AgentMessage}}</code></div>{{end}}
     </div>
 
     <div class="card">
-      <div>Enabled Services</div>
-      {{if .Services}}
-        <ul>
-        {{range .Services}}<li>{{.}}</li>{{end}}
-        </ul>
-      {{else}}
-        <div class="meta">No data.</div>
-      {{end}}
+      <div class="controls">
+        <input id="service-filter" type="search" placeholder="Filter services">
+        <div class="toggle-group">
+          <button type="button" class="toggle active" data-state="enabled">Enabled</button>
+          <button type="button" class="toggle" data-state="running">Running</button>
+        </div>
+      </div>
+      <div class="meta service-meta">
+        Total <span id="service-total">{{.TotalServices}}</span>
+        <span id="service-state">{{.ServiceState}}</span> services.
+        Visible <span id="service-visible">{{.TotalServices}}</span>.
+      </div>
+      <div id="service-error" class="bad" style="display:none"></div>
+      <div id="services-empty" class="meta" {{if .Services}}style="display:none"{{end}}>No data.</div>
+      <ul id="service-list">
+      {{range .Services}}<li>{{.}}</li>{{end}}
+      </ul>
     </div>
+
+    <script>
+      (function() {
+        const list = document.getElementById("service-list");
+        const filter = document.getElementById("service-filter");
+        const totalEl = document.getElementById("service-total");
+        const visibleEl = document.getElementById("service-visible");
+        const stateEl = document.getElementById("service-state");
+        const errorEl = document.getElementById("service-error");
+        const emptyEl = document.getElementById("services-empty");
+        const buttons = document.querySelectorAll(".toggle");
+
+        let services = Array.from(list.querySelectorAll("li")).map((li) => li.textContent);
+
+        function render(items) {
+          list.innerHTML = "";
+          for (const name of items) {
+            const li = document.createElement("li");
+            li.textContent = name;
+            list.appendChild(li);
+          }
+          if (emptyEl) {
+            emptyEl.style.display = items.length ? "none" : "block";
+          }
+        }
+
+        function updateCounts(visibleCount) {
+          totalEl.textContent = String(services.length);
+          visibleEl.textContent = String(visibleCount);
+        }
+
+        function applyFilter() {
+          const q = filter.value.trim().toLowerCase();
+          const filtered = q ? services.filter((s) => s.toLowerCase().includes(q)) : services.slice();
+          render(filtered);
+          updateCounts(filtered.length);
+        }
+
+        function setState(state) {
+          buttons.forEach((btn) => {
+            btn.classList.toggle("active", btn.dataset.state === state);
+          });
+          stateEl.textContent = state;
+        }
+
+        function load(state) {
+          errorEl.style.display = "none";
+          fetch("/services?state=" + encodeURIComponent(state), { headers: { "Accept": "application/json" } })
+            .then((resp) => resp.json().then((data) => ({ ok: resp.ok, data: data })))
+            .then((result) => {
+              if (!result.ok || !result.data.ok) {
+                throw new Error(result.data.error || "service list unavailable");
+              }
+              services = result.data.services || [];
+              filter.value = "";
+              render(services);
+              updateCounts(services.length);
+              setState(state);
+            })
+            .catch((err) => {
+              errorEl.textContent = err.message;
+              errorEl.style.display = "block";
+            });
+        }
+
+        filter.addEventListener("input", applyFilter);
+        buttons.forEach((btn) => btn.addEventListener("click", () => load(btn.dataset.state)));
+
+        updateCounts(services.length);
+        setState(stateEl.textContent || "enabled");
+      })();
+    </script>
   </body>
 </html>

@@ -1,8 +1,8 @@
 Package: tunapanel
-Version: 0.1.4
+Version: 0.1.5
 Architecture: amd64
 Maintainer: Mahmut Micozkadıoğlu <mahmutmicoz@gmail.com>
-Installed-Size: 17378
+Installed-Size: 17386
 Depends: systemd
 Section: admin
 Priority: optional
